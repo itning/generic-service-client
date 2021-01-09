@@ -1,0 +1,82 @@
+<configuration scan="false" scanPeriod="5 seconds" debug="false">
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_PATH" value="/logs/generic-service-client"/>
+    <property name="LOG_LEVEL" value="INFO"/>
+    <!--日志文件保留最大天数-->
+    <property name="MAX_DAY" value="30"/>
+    <property name="MAX_SIZE" value="500mb"/>
+    <!--业务日志输出格式-->
+    <property name="SERVICE_OUTPUT_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{INNER_TRACE_ID}] %-5level %logger{56} - %msg%n"/>
+
+    <!-- WEB SOCKET 输出设置 -->
+    <appender name="WEB_SOCKET" class="top.itning.generic.service.core.config.WebSocketOutputStreamAppender">　　
+        <encoder>　　　　　　　
+            <pattern>%d{HH:mm:ss.SSS} [%X{INNER_TRACE_ID}] %-5level %logger{36} - %msg%n</pattern>　　　　
+        </encoder>　　
+    </appender>
+    <!--输出到文件-->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/error.log</File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/error-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_DAY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${SERVICE_OUTPUT_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/root.log</File>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/root-%d{yyyy-MM-dd}-%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>${MAX_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_DAY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${SERVICE_OUTPUT_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 过滤掉临界点LOG_LEVEL级别之前的日志 -->
+            <level>${LOG_LEVEL}</level>
+        </filter>
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${SERVICE_OUTPUT_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 过滤掉临界点LOG_LEVEL级别之前的日志 -->
+            <level>${LOG_LEVEL}</level>
+        </filter>
+    </appender>
+
+    <logger name="top.itning.generic.service" level="DEBUG"/>
+    <logger name="org.apache.dubbo.rpc.protocol.dubbo.LazyConnectExchangeClient" level="ERROR"/>
+    <logger name="org.springframework.web.servlet.PageNotFound" level="ERROR"/>
+    　　　
+    <root level="${LOG_LEVEL}">　　　　　
+        <appender-ref ref="STDOUT"/>　
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="WEB_SOCKET"/>
+        <appender-ref ref="ROOT"/>
+    </root>
+</configuration>

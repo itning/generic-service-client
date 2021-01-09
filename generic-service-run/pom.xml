@@ -38,6 +38,10 @@
             <groupId>top.itning</groupId>
             <artifactId>generic-service-support-zk</artifactId>
         </dependency>
+        <dependency>
+            <groupId>top.itning</groupId>
+            <artifactId>generic-service-web</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

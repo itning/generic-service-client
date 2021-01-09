@@ -1,4 +1,4 @@
-package top.itning.generic.service.zk.config;
+package top.itning.generic.service.nacos.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,9 +10,9 @@ import java.util.Map;
  * @author itning
  * @since 2020/12/24 14:37
  */
-@ConfigurationProperties(prefix = "generic-service-support-zk")
+@ConfigurationProperties(prefix = "generic-service-support-nacos")
 @Component
 @Data
-public class ZkProperties {
-    private Map<String, String> zkList;
+public class NacosProperties {
+    private Map<String, String> nacosList;
 }

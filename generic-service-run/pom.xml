@@ -5,7 +5,7 @@
     <parent>
         <artifactId>generic-service-client</artifactId>
         <groupId>top.itning</groupId>
-        <version>1.3.2-RELEASE</version>
+        <version>1.3.3-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,11 +23,20 @@
         </dependency>
         <dependency>
             <groupId>top.itning</groupId>
-            <artifactId>generic-service-support-zk</artifactId>
+            <artifactId>generic-service-support-file</artifactId>
         </dependency>
         <dependency>
             <groupId>top.itning</groupId>
-            <artifactId>generic-service-support-file</artifactId>
+            <artifactId>generic-service-support-registry</artifactId>
+        </dependency>
+        <!--根据注册中心类型选择-->
+        <dependency>
+            <groupId>top.itning</groupId>
+            <artifactId>generic-service-support-nacos</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.itning</groupId>
+            <artifactId>generic-service-support-zk</artifactId>
         </dependency>
 
         <dependency>

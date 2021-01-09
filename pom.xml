@@ -9,6 +9,8 @@
         <module>generic-service-core</module>
         <module>generic-service-support-zk</module>
         <module>generic-service-support-file</module>
+        <module>generic-service-support-nacos</module>
+        <module>generic-service-support-registry</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -18,7 +20,7 @@
     </parent>
     <groupId>top.itning</groupId>
     <artifactId>generic-service-client</artifactId>
-    <version>1.3.2-RELEASE</version>
+    <version>1.3.3-RELEASE</version>
     <name>generic-service-client</name>
     <description>Generic Service Client</description>
 
@@ -47,6 +49,16 @@
             <dependency>
                 <groupId>top.itning</groupId>
                 <artifactId>generic-service-support-file</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.itning</groupId>
+                <artifactId>generic-service-support-nacos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.itning</groupId>
+                <artifactId>generic-service-support-registry</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

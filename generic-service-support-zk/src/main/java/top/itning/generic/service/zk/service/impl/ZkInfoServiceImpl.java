@@ -10,6 +10,7 @@ import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.springframework.stereotype.Service;
+import top.itning.generic.service.support.registry.pojo.ServiceInfo;
 import top.itning.generic.service.zk.dto.ZkInfo;
 import top.itning.generic.service.zk.service.ZkInfoService;
 
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @author itning
  * @since 2020/12/24 14:32
  */
-@Service
+@Service("zk")
 @Slf4j
 public class ZkInfoServiceImpl implements ZkInfoService {
 
@@ -138,6 +139,35 @@ public class ZkInfoServiceImpl implements ZkInfoService {
     @Override
     public Set<String> getEnv() {
         return curatorFrameworkMap.keySet();
+    }
+
+    @Override
+    public Collection<String> getAllEnv() {
+        return curatorFrameworkMap.keySet();
+    }
+
+    @Override
+    public ServiceInfo getProviders(String env) {
+        ZkInfo zkInfo = getChildNodeNameWithCache(env, "/dubbo");
+        ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setSuccess(zkInfo.isSuccess());
+        serviceInfo.setRegConnected(zkInfo.isZkConnected());
+        serviceInfo.setUpdateTime(zkInfo.getUpdateTime());
+        serviceInfo.setEnv(zkInfo.getEnv());
+        serviceInfo.setData(zkInfo.getNodes());
+        return serviceInfo;
+    }
+
+    @Override
+    public ServiceInfo getProvideDetail(String env, String provider) {
+        ZkInfo zkInfo = getChildNodeName(env, "/dubbo/" + provider + "/providers");
+        ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setSuccess(zkInfo.isSuccess());
+        serviceInfo.setRegConnected(zkInfo.isZkConnected());
+        serviceInfo.setUpdateTime(zkInfo.getUpdateTime());
+        serviceInfo.setEnv(zkInfo.getEnv());
+        serviceInfo.setData(zkInfo.getNodes());
+        return serviceInfo;
     }
 
     static class ConnectionStateListenerImpl implements ConnectionStateListener {

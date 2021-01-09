@@ -31,15 +31,19 @@
 
 #### 后端
 
-目前接口**提示功能仅支持Zookeeper注册中心**，如果注册中心不是用的Zookeeper就不需要配这个地址
+目前接口**提示功能仅支持Zookeeper和Nacos注册中心**，如果注册中心不是用的Zookeeper或者Nacos就不需要配这个地址
 
 [application.properties](https://github.com/itning/generic-service-client/blob/master/generic-service-run/src/main/resources/application.properties#L21) 文件配置ZK地址用于提示，如果不需要提示则不需要配置！
 
 ```properties
-# 支持多个ZK注册中心，例如下面就写了三个注册中心（A,B,C）
-test-zk.zk-list.A=192.168.66.1:2181,192.168.66.2:2181:2181,192.168.66.3:2181
-test-zk.zk-list.B=192.168.77.1:2181,192.168.77.2:2181:2181,192.168.77.3:2181
-test-zk.zk-list.C=192.168.88.1:2181,192.168.88.2:2181:2181,192.168.88.3:2181
+# 支持多个ZK注册中心，例如下面就写了三个注册中心（zk-A,zk-B,zk-C）
+generic-service-support-zk.zk-list.zk-A=192.168.66.1:2181,192.168.66.2:2181:2181,192.168.66.3:2181
+generic-service-support-zk.zk-list.zk-B=192.168.77.1:2181,192.168.77.2:2181:2181,192.168.77.3:2181
+generic-service-support-zk.zk-list.zk-C=192.168.88.1:2181,192.168.88.2:2181:2181,192.168.88.3:2181
+# 支持多个Nacos注册中心，例如下面就写了三个注册中心（nacos-A,nacos-B,nacos-C）
+generic-service-support-nacos.nacos-list.nacos-A=127.0.0.1:8848
+generic-service-support-nacos.nacos-list.nacos-B=127.0.0.1:8858
+generic-service-support-nacos.nacos-list.nacos-C=127.0.0.1:8868
 ```
 
 其它配置不需要改动，默认端口号：8868

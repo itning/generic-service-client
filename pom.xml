@@ -21,7 +21,7 @@
     </parent>
     <groupId>top.itning</groupId>
     <artifactId>generic-service-client</artifactId>
-    <version>1.3.3-RELEASE</version>
+    <version>1.3.3-W1-RELEASE</version>
     <name>generic-service-client</name>
     <description>Generic Service Client</description>
 

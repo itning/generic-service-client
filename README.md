@@ -10,7 +10,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client/commits)
 [![GitHub release](https://img.shields.io/github/release/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client/releases)
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client)
-[![HitCount](http://hits.dwyl.com/itning/generic-service-client.svg)](http://hits.dwyl.com/itning/generic-service-client)
+[![HitCount](http://hits.dwyl.io/itning/generic-service-client.svg)](http://hits.dwyl.io/itning/generic-service-client)
 [![language](https://img.shields.io/badge/language-JAVA-green.svg)](https://github.com/itning/generic-service-client)
 
 ## 项目架构
@@ -27,11 +27,11 @@
 
 ## 快速开始
 
-直接 [下载JAR](https://github.com/itning/generic-service-client/releases/download/1.3.3-RELEASE/generic-service-client-with-web-1.3.3-RELEASE.jar) 包，输入命令`java -jar generic-service-client-with-web-1.3.3-RELEASE.jar`
+直接 [下载JAR](https://github.com/itning/generic-service-client/releases/download/1.3.3-W1-RELEASE/generic-service-client-1.3.3-W1-RELEASE.jar) 包，输入命令`java -jar generic-service-client-1.3.3-W1-RELEASE.jar`
 
 即可启动项目，浏览器输入：`http://localhost:8868` 即可！‘
 
-如果需要更改配置文件，则输入该命令：`java -jar -Dspring.config.location=application.properties generic-service-client-with-web-1.3.3-RELEASE.jar`
+如果需要更改配置文件，则输入该命令：`java -jar -Dspring.config.location=application.properties generic-service-client-1.3.3-W1-RELEASE.jar`
 
 注意：该JAR包仅支持本地访问，如果需要支持其它访问，需要自行编译！
 

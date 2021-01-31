@@ -1,4 +1,4 @@
-package top.itning.generic.service.jar.dto;
+package top.itning.generic.service.common.jar;
 
 import lombok.Data;
 

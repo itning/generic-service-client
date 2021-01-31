@@ -1,11 +1,10 @@
-package top.itning.generic.service.core.controller;
+package top.itning.generic.service.common.websocket;
 
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import top.itning.generic.service.core.constant.WebSocketMessageType;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -76,7 +75,7 @@ public final class ProgressWebSocket {
                 }
             }
             if (!needCleanTokenList.isEmpty()) {
-                logger.info("Clear UnOpen Session Size：{} List：{}", needCleanTokenList.size(),GSON_INSTANCE.toJson(needCleanTokenList));
+                logger.info("Clear UnOpen Session Size：{} List：{}", needCleanTokenList.size(), GSON_INSTANCE.toJson(needCleanTokenList));
                 needCleanTokenList.forEach(SESSION_MAP::remove);
             }
         } catch (Exception e) {

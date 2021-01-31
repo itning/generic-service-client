@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.FileCopyUtils;
-import top.itning.generic.service.jar.dto.MethodInfo;
+import top.itning.generic.service.common.jar.MethodInfo;
 
 import java.io.File;
 import java.io.IOException;

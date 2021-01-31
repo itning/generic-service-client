@@ -11,6 +11,7 @@
         <module>generic-service-support-file</module>
         <module>generic-service-support-nacos</module>
         <module>generic-service-support-registry</module>
+        <module>generic-service-support-nexus</module>
         <module>generic-service-web</module>
     </modules>
     <parent>
@@ -60,6 +61,11 @@
             <dependency>
                 <groupId>top.itning</groupId>
                 <artifactId>generic-service-support-registry</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.itning</groupId>
+                <artifactId>generic-service-support-nexus</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

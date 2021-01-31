@@ -27,6 +27,10 @@
         </dependency>
         <dependency>
             <groupId>top.itning</groupId>
+            <artifactId>generic-service-support-nexus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.itning</groupId>
             <artifactId>generic-service-support-registry</artifactId>
         </dependency>
         <!--根据注册中心类型选择-->

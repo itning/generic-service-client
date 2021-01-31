@@ -10,9 +10,9 @@ import org.apache.dubbo.remoting.Constants;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.slf4j.MDC;
 import org.springframework.util.CollectionUtils;
-import top.itning.generic.service.core.controller.ProgressWebSocket;
+import top.itning.generic.service.common.websocket.ProgressWebSocket;
+import top.itning.generic.service.common.websocket.WebSocketMessageType;
 import top.itning.generic.service.core.bo.DubboGenericRequestBO;
-import top.itning.generic.service.core.constant.WebSocketMessageType;
 
 import java.util.ArrayList;
 import java.util.Collections;

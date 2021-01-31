@@ -6,11 +6,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import top.itning.generic.service.jar.dto.MethodInfo;
+import top.itning.generic.service.common.jar.JarHandlerInterface;
+import top.itning.generic.service.common.jar.MethodInfo;
 import top.itning.generic.service.jar.handle.spring.boot.JarLauncher;
 import top.itning.generic.service.jar.handle.spring.boot.WarLauncher;
-import top.itning.generic.service.jar.handle.zip.ZipClassLoader;
 import top.itning.generic.service.jar.handle.spring.boot.archive.JarFileArchive;
+import top.itning.generic.service.jar.handle.zip.ZipClassLoader;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -34,9 +35,27 @@ import static top.itning.generic.service.jar.handle.util.ReflectionUtils.*;
  */
 @Slf4j
 @Component
-public class JarHandler {
+public class JarHandler implements JarHandlerInterface {
 
     private static final Gson GSON_INSTANCE = new Gson();
+
+    @Override
+    public List<MethodInfo> handler(File file, String interfaceName, String methodName) {
+        StopWatch stopwatch = new StopWatch("Handle " + interfaceName + " " + methodName);
+        List<MethodInfo> result = new ArrayList<>();
+        try {
+            jarFileHandle(interfaceName, methodName, stopwatch, result, file);
+            if (result.isEmpty()) {
+                zipFileHandle(interfaceName, methodName, stopwatch, result, file);
+            }
+        } catch (Exception e) {
+            log.warn("处理失败：InterfaceName:{} MethodName:{}", interfaceName, methodName, e);
+        } finally {
+            log.info("Total Cost：{} Seconds", stopwatch.getTotalTimeSeconds());
+            log.info(stopwatch.prettyPrint());
+        }
+        return result;
+    }
 
     /**
      * 处理

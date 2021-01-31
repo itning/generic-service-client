@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import top.itning.generic.service.jar.dto.MethodInfo;
+import top.itning.generic.service.common.jar.MethodInfo;
 import top.itning.generic.service.jar.handle.JarHandler;
 
 import javax.validation.constraints.NotEmpty;

@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.itning.generic.service.core.controller.ProgressWebSocket;
+import top.itning.generic.service.common.websocket.ProgressWebSocket;
+import top.itning.generic.service.core.bo.DubboGenericRequestBO;
 import top.itning.generic.service.core.service.DubboGenericInvokeTask;
 import top.itning.generic.service.core.service.DubboGenericService;
-import top.itning.generic.service.core.bo.DubboGenericRequestBO;
 
 import java.util.concurrent.*;
 

@@ -93,6 +93,11 @@ public class ZkInfoServiceImpl implements ZkInfoService {
             return ZkInfo.withFailed(env);
         }
         if (!IS_CONNECTED.getOrDefault(env, false)) {
+            boolean connected = curatorFramework.getZookeeperClient().isConnected();
+            log.info("Zookeeper Env {} Is Connected: {}", env, connected);
+            if (connected && IS_CONNECTED.containsKey(env)) {
+                IS_CONNECTED.put(env, true);
+            }
             return ZkInfo.withFailed(env, false);
         }
         try {
@@ -179,6 +184,7 @@ public class ZkInfoServiceImpl implements ZkInfoService {
 
         @Override
         public void stateChanged(CuratorFramework client, ConnectionState newState) {
+            log.info("Zookeeper {} Connection State Changed: {}", env, newState);
             IS_CONNECTED.put(env, newState.isConnected());
         }
     }

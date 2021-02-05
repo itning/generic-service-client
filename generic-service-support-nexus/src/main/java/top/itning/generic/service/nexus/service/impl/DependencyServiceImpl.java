@@ -343,19 +343,21 @@ public class DependencyServiceImpl implements DependencyService, ApplicationCont
                 userService.login();
                 return get(dependencyXml, retryCount + 1);
             }
-            HttpEntity entity = response.getEntity();
-            String xml = EntityUtils.toString(entity);
-            Document document = DocumentHelper.parseText(xml);
-            return XmlUtils.parseVersionInfo(document)
-                    .stream()
-                    .map(it -> {
-                        Artifact artifactItem = new Artifact();
-                        artifactItem.setGroupId(artifact.getGroupId());
-                        artifactItem.setArtifactId(artifact.getArtifactId());
-                        artifactItem.setVersion(it);
-                        return artifactItem;
-                    })
-                    .collect(Collectors.toList());
+            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+                HttpEntity entity = response.getEntity();
+                String xml = EntityUtils.toString(entity);
+                Document document = DocumentHelper.parseText(xml);
+                return XmlUtils.parseVersionInfo(document)
+                        .stream()
+                        .map(it -> {
+                            Artifact artifactItem = new Artifact();
+                            artifactItem.setGroupId(artifact.getGroupId());
+                            artifactItem.setArtifactId(artifact.getArtifactId());
+                            artifactItem.setVersion(it);
+                            return artifactItem;
+                        })
+                        .collect(Collectors.toList());
+            }
         } catch (Exception e) {
             log.error("Get XML Exception", e);
         }

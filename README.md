@@ -21,9 +21,11 @@
 
 ## 介绍
 
-测试盒子：
+- 主要功能：使用网页发起dubbo协议的请求。http协议转dubbo协议
 
-主要功能是dubbo泛化直连调用，直接使用网页调用Dubbo接口！
+- 内部原理：[dubbo泛化调用](https://dubbo.apache.org/zh/docs/v2.7/user/examples/generic-reference/)
+
+**网页填写请求的信息->http协议->泛化调用->服务提供者**
 
 ## 快速开始
 

@@ -122,3 +122,6 @@ generic-service-support-nacos.nacos-list.nacos-C=127.0.0.1:8868
 
 ![dubboURLjiexi](https://raw.githubusercontent.com/itning/generic-service-client/master/pic/dubboURLjiexi.jpg)
 
+#### 夜间模式
+
+![dubboURLjiexi](https://raw.githubusercontent.com/itning/generic-service-client/master/pic/black.jpg)

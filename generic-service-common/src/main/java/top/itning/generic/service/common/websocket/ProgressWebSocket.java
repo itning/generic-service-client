@@ -3,9 +3,15 @@ package top.itning.generic.service.common.websocket;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import top.itning.generic.service.common.websocket.event.WebSocketReceiveMessageEvent;
+import top.itning.generic.service.common.websocket.event.WebSocketSendMessageEvent;
 
+import javax.annotation.Nonnull;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -24,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 @ServerEndpoint(value = "/p")
-public final class ProgressWebSocket {
+public final class ProgressWebSocket implements ApplicationEventPublisherAware, ApplicationListener<WebSocketSendMessageEvent> {
     private static final Logger logger = LoggerFactory.getLogger(ProgressWebSocket.class);
 
     private static final Gson GSON_INSTANCE = new Gson();
@@ -32,6 +38,8 @@ public final class ProgressWebSocket {
      * 存放Session
      */
     private static final Map<String, Session> SESSION_MAP = new ConcurrentHashMap<>(16);
+
+    private static ApplicationEventPublisher applicationEventPublisher;
 
     public static void sendMessage(String msg) {
         clearUnOpenSessionMap();
@@ -44,11 +52,11 @@ public final class ProgressWebSocket {
         });
     }
 
-    public static void sendMessage(String token, String echo, String msg) {
+    private static void sendMessage(String token, String echo, String msg) {
         sendMessage(token, echo, WebSocketMessageType.TEXT, msg);
     }
 
-    public static void sendMessage(String token, String echo, WebSocketMessageType type, String msg) {
+    private static void sendMessage(String token, String echo, WebSocketMessageType type, String msg) {
         Session session = SESSION_MAP.get(token);
         if (null == session) {
             return;
@@ -110,8 +118,8 @@ public final class ProgressWebSocket {
     }
 
     @OnClose
-    public void onClose() {
-        logger.debug("on close");
+    public void onClose(CloseReason closeReason, Session session) {
+        logger.debug("On Close Session Id: {} Close Reason: {}", session.getId(), CloseReason.CloseCodes.getCloseCode(closeReason.getCloseCode().getCode()));
     }
 
     @OnMessage
@@ -121,9 +129,25 @@ public final class ProgressWebSocket {
         session.getBasicRemote().sendText("收到消息 ");
     }
 
+    @OnMessage
+    public void onMessage(ByteBuffer message) throws IOException {
+        logger.debug("onMessage {}", message);
+        applicationEventPublisher.publishEvent(new WebSocketReceiveMessageEvent(message));
+    }
+
     @OnError
     public void onError(Session session, Throwable error) {
         SESSION_MAP.remove(session.getId());
         logger.warn("onError ", error);
+    }
+
+    @Override
+    public void onApplicationEvent(@Nonnull WebSocketSendMessageEvent event) {
+        sendMessage(event.getToken(), event.getEcho(), event.getType(), event.getMsg());
+    }
+
+    @Override
+    public void setApplicationEventPublisher(@Nonnull ApplicationEventPublisher applicationEventPublisher) {
+        ProgressWebSocket.applicationEventPublisher = applicationEventPublisher;
     }
 }

@@ -90,8 +90,8 @@ public final class LogWebSocket {
     }
 
     @OnClose
-    public void onClose() {
-        logger.debug("on close");
+    public void onClose(CloseReason closeReason, Session session) {
+        logger.debug("On Close Session Id: {} Close Reason: {}", session.getId(), CloseReason.CloseCodes.getCloseCode(closeReason.getCloseCode().getCode()));
     }
 
     @OnMessage

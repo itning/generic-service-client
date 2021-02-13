@@ -11,16 +11,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.itning.generic.service.common.jar.JarHandlerInterface;
 import top.itning.generic.service.common.jar.MethodInfo;
-import top.itning.generic.service.common.websocket.ProgressWebSocket;
 import top.itning.generic.service.common.websocket.WebSocketMessageType;
+import top.itning.generic.service.common.websocket.event.WebSocketSendMessageEvent;
 import top.itning.generic.service.nexus.config.NexusProperties;
 import top.itning.generic.service.nexus.entry.Artifact;
 import top.itning.generic.service.nexus.entry.RestModel;
@@ -49,7 +47,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class DependencyServiceImpl implements DependencyService, ApplicationContextAware {
+public class DependencyServiceImpl implements DependencyService {
 
     private static final Gson GSON_INSTANCE = new Gson();
 
@@ -73,24 +71,17 @@ public class DependencyServiceImpl implements DependencyService, ApplicationCont
     private final XmlService xmlService;
     private final NexusProperties nexusProperties;
     private final ApacheHttpRequestClient httpRequestClient;
-    private JarHandlerInterface jarHandlerInterface;
+    private final JarHandlerInterface jarHandlerInterface;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public DependencyServiceImpl(UserService userService, XmlService xmlService, NexusProperties nexusProperties, ApacheHttpRequestClient httpRequestClient) {
+    public DependencyServiceImpl(UserService userService, XmlService xmlService, NexusProperties nexusProperties, ApacheHttpRequestClient httpRequestClient, JarHandlerInterface jarHandlerInterface, ApplicationEventPublisher applicationEventPublisher) {
         this.userService = userService;
         this.xmlService = xmlService;
         this.nexusProperties = nexusProperties;
         this.httpRequestClient = httpRequestClient;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        try {
-            jarHandlerInterface = applicationContext.getBean(JarHandlerInterface.class);
-        } catch (BeansException e) {
-            log.error("Bean Exception", e);
-            throw e;
-        }
+        this.jarHandlerInterface = jarHandlerInterface;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -134,7 +125,7 @@ public class DependencyServiceImpl implements DependencyService, ApplicationCont
         try {
             EXECUTOR_SERVICE.submit(() -> {
                 try {
-                    ProgressWebSocket.sendMessage(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_CANCEL_TOKEN, downloadToken);
+                    applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_CANCEL_TOKEN, downloadToken));
                     DOWNLOAD_TOKEN_INFO.put(token, downloadToken);
                     URI uri = artifact.toURI(nexusProperties.getBaseUrl(), artifact.getArtifactId() + "-" + artifact.getAvailableVersion() + ".jar");
                     HttpGet httpGet = new HttpGet(uri);
@@ -142,7 +133,7 @@ public class DependencyServiceImpl implements DependencyService, ApplicationCont
                     downloadFile(httpGet, nexusProperties.getFileDir(), artifact, token, echo, 0).ifPresent(file -> postProcess(file, interfaceName, methodName, token, echo));
                 } catch (Exception e) {
                     log.info("下载失败：", e);
-                    ProgressWebSocket.sendMessage(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_FAILED, e.getMessage());
+                    applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_FAILED, e.getMessage()));
                 } finally {
                     CANCEL_MAP.remove(downloadToken);
                     DOWNLOAD_TOKEN_INFO.remove(token);
@@ -167,13 +158,13 @@ public class DependencyServiceImpl implements DependencyService, ApplicationCont
     private void postProcess(File file, String interfaceName, String methodName, String token, String echo) {
         if (null != jarHandlerInterface) {
             List<MethodInfo> handler = jarHandlerInterface.handler(file, interfaceName, methodName);
-            ProgressWebSocket.sendMessage(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_SUCCESS, GSON_INSTANCE.toJson(handler));
+            applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_SUCCESS, GSON_INSTANCE.toJson(handler)));
         }
     }
 
     private void progress(long downloadBytes, long totalBytes, long thisTimeDownloadBytes, long startTime, long endTime, String token, String echo) {
         double speed = ((double) thisTimeDownloadBytes / (endTime - startTime)) * 1000 / 1024;
-        ProgressWebSocket.sendMessage(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_PROGRESS, downloadBytes + "-" + totalBytes + "-" + speed);
+        applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_PROGRESS, downloadBytes + "-" + totalBytes + "-" + speed));
     }
 
     private Optional<File> downloadFile(HttpGet httpGet, String dir, Artifact artifact, String token, String echo, int retryCount) throws Exception {
@@ -238,7 +229,7 @@ public class DependencyServiceImpl implements DependencyService, ApplicationCont
             } finally {
                 log.info("文件复制结束：{}", httpGet.getURI());
                 if (httpGet.isAborted()) {
-                    ProgressWebSocket.sendMessage(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_FAILED, "下载已经被取消");
+                    applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(token, echo, WebSocketMessageType.NEXUS_DOWNLOAD_FAILED, "下载已经被取消"));
                     log.info("下载已经被取消，删除遗留文件：{}", targetFile);
                     boolean delete = targetFile.delete();
                     if (delete) {

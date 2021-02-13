@@ -9,9 +9,10 @@ import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.remoting.Constants;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.slf4j.MDC;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.CollectionUtils;
-import top.itning.generic.service.common.websocket.ProgressWebSocket;
 import top.itning.generic.service.common.websocket.WebSocketMessageType;
+import top.itning.generic.service.common.websocket.event.WebSocketSendMessageEvent;
 import top.itning.generic.service.core.bo.DubboGenericRequestBO;
 
 import java.util.ArrayList;
@@ -34,12 +35,14 @@ public class DubboGenericInvokeTask implements Runnable {
 
     private static final String MDC_TRADE_ID = "INNER_TRACE_ID";
 
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final DubboGenericRequestBO dubboGenericRequestBO;
     private final ApplicationConfig applicationConfig;
 
-    public DubboGenericInvokeTask(ApplicationConfig applicationConfig, DubboGenericRequestBO dubboGenericRequestBO1) {
+    public DubboGenericInvokeTask(ApplicationEventPublisher applicationEventPublisher, ApplicationConfig applicationConfig, DubboGenericRequestBO dubboGenericRequestBO) {
+        this.applicationEventPublisher = applicationEventPublisher;
         this.applicationConfig = applicationConfig;
-        this.dubboGenericRequestBO = dubboGenericRequestBO1;
+        this.dubboGenericRequestBO = dubboGenericRequestBO;
     }
 
     @Override
@@ -85,7 +88,7 @@ public class DubboGenericInvokeTask implements Runnable {
 
             if (null == result) {
                 log.info("Result Is Null");
-                ProgressWebSocket.sendMessage(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), "调用成功：入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n");
+                sendMessage("调用成功：入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n");
                 return;
             }
 
@@ -93,18 +96,26 @@ public class DubboGenericInvokeTask implements Runnable {
 
             String jsonString = GSON_INSTANCE_WITH_PRETTY_PRINT.toJson(result);
 
-            ProgressWebSocket.sendMessage(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), "调用成功：TraceID[" + MDC.get(MDC_TRADE_ID) + "] 入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n>>>\n");
-            ProgressWebSocket.sendMessage(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), WebSocketMessageType.JSON, jsonString);
+            sendMessage("调用成功：TraceID[" + MDC.get(MDC_TRADE_ID) + "] 入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n>>>\n");
+            sendMessage(WebSocketMessageType.JSON, jsonString);
         } catch (Throwable e) {
             log.warn("Invoke Error：", e);
-            ProgressWebSocket.sendMessage(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), "调用失败：入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n Msg：" + e.getMessage());
+            sendMessage("调用失败：入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n Msg：" + e.getMessage());
         } finally {
             if (null != reference) {
                 reference.destroy();
             }
-            ProgressWebSocket.sendMessage(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), "执行完成");
+            sendMessage("执行完成");
             MDC.remove(MDC_TRADE_ID);
         }
+    }
+
+    private void sendMessage(String message) {
+        sendMessage(WebSocketMessageType.TEXT, message);
+    }
+
+    private void sendMessage(WebSocketMessageType type, String message) {
+        applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), type, message));
     }
 
     private void putTrace() {

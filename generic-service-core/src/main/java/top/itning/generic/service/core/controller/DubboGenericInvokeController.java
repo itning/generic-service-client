@@ -1,12 +1,17 @@
 package top.itning.generic.service.core.controller;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.itning.generic.service.common.websocket.event.WebSocketReceiveMessageEvent;
 import top.itning.generic.service.core.bo.DubboGenericRequestBO;
 import top.itning.generic.service.core.converter.DubboGenericConverter;
 import top.itning.generic.service.core.dto.DubboGenericRequestDTO;
 import top.itning.generic.service.core.service.DubboGenericService;
+
+import javax.annotation.Nonnull;
 
 /**
  * dubbo相关操作
@@ -17,7 +22,9 @@ import top.itning.generic.service.core.service.DubboGenericService;
 @CrossOrigin
 @RestController
 @RequestMapping("/dubbo")
-public class DubboGenericInvokeController {
+public class DubboGenericInvokeController implements ApplicationListener<WebSocketReceiveMessageEvent> {
+
+    private static final Gson GSON_INSTANCE = new Gson();
 
     private final DubboGenericService dubboGenericService;
 
@@ -39,5 +46,11 @@ public class DubboGenericInvokeController {
         dubboGenericService.invoke(dubboGenericRequestBO);
 
         return dubboGenericRequestBO.toString();
+    }
+
+    @Override
+    public void onApplicationEvent(@Nonnull WebSocketReceiveMessageEvent event) {
+        DubboGenericRequestBO dubboGenericRequestBO = GSON_INSTANCE.fromJson(event.getReceiveMessage(), DubboGenericRequestBO.class);
+        dubboGenericService.invoke(dubboGenericRequestBO);
     }
 }

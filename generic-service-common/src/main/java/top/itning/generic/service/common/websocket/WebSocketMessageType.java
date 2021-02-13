@@ -10,37 +10,37 @@ public enum WebSocketMessageType {
     /**
      * 文本类型
      */
-    TEXT(0),
+    TEXT((byte) 0),
     /**
      * JSON类型
      */
-    JSON(1),
+    JSON((byte) 1),
 
     /**
      * nexus下载取消token
      */
-    NEXUS_DOWNLOAD_CANCEL_TOKEN(2),
+    NEXUS_DOWNLOAD_CANCEL_TOKEN((byte) 2),
 
     /**
      * nexus下载进度
      */
-    NEXUS_DOWNLOAD_PROGRESS(3),
+    NEXUS_DOWNLOAD_PROGRESS((byte) 3),
 
     /**
      * nexus下载完成
      */
-    NEXUS_DOWNLOAD_SUCCESS(4),
+    NEXUS_DOWNLOAD_SUCCESS((byte) 4),
 
     /**
      * nexus下载失败
      */
-    NEXUS_DOWNLOAD_FAILED(5),
+    NEXUS_DOWNLOAD_FAILED((byte) 5),
     ;
 
     @Getter
-    private final int id;
+    private final byte id;
 
-    WebSocketMessageType(int id) {
+    WebSocketMessageType(byte id) {
         this.id = id;
     }
 }

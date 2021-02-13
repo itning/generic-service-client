@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,9 +58,18 @@ public final class ProgressWebSocket {
             return;
         }
         try {
-            session.getBasicRemote().sendText(type.getId() + "|" + echo + "|" + msg);
+            byte[] echoBytes = echo.getBytes(StandardCharsets.UTF_8);
+            byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(1 + echoBytes.length + msgBytes.length);
+            byteBuffer.put(type.getId());
+            byteBuffer.put(echoBytes);
+            byteBuffer.put(msgBytes);
+            byteBuffer.flip();
+            session.getBasicRemote().sendBinary(byteBuffer);
         } catch (IOException e) {
             logger.warn(e.getMessage());
+        } catch (Exception e) {
+            logger.error("Send Message Catch Exception", e);
         }
     }
 

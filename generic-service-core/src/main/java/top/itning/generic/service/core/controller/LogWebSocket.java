@@ -10,6 +10,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -58,11 +59,10 @@ public final class LogWebSocket {
                 byte[] bytes = new byte[swapStream.available()];
                 int read = swapStream.read(bytes);
                 if (read != -1) {
-                    String str = new String(bytes);
                     //remove un open in session list
                     clearSessionMap();
                     for (Session s : SESSION_MAP.values()) {
-                        s.getBasicRemote().sendText(str);
+                        s.getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
                     }
                 }
             }

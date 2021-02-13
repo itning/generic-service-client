@@ -1,4 +1,4 @@
-package top.itning.generic.service.common.websocket;
+package top.itning.generic.service.common.websocket.type;
 
 import lombok.Getter;
 

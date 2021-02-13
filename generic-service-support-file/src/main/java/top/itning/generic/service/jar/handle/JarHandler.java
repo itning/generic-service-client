@@ -1,6 +1,5 @@
 package top.itning.generic.service.jar.handle;
 
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -25,6 +24,7 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE;
 import static top.itning.generic.service.jar.handle.util.ReflectionUtils.*;
 
 /**
@@ -36,8 +36,6 @@ import static top.itning.generic.service.jar.handle.util.ReflectionUtils.*;
 @Slf4j
 @Component
 public class JarHandler implements JarHandlerInterface {
-
-    private static final Gson GSON_INSTANCE = new Gson();
 
     @Override
     public List<MethodInfo> handler(File file, String interfaceName, String methodName) {

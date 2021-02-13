@@ -1,6 +1,5 @@
-package top.itning.generic.service.common.websocket;
+package top.itning.generic.service.core.controller;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -10,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.itning.generic.service.common.websocket.event.WebSocketReceiveMessageEvent;
 import top.itning.generic.service.common.websocket.event.WebSocketSendMessageEvent;
+import top.itning.generic.service.common.websocket.type.WebSocketMessageType;
 
 import javax.annotation.Nonnull;
 import javax.websocket.*;
@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE;
+
 /**
  * 日志输出
  *
@@ -33,7 +35,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class ProgressWebSocket implements ApplicationEventPublisherAware, ApplicationListener<WebSocketSendMessageEvent> {
     private static final Logger logger = LoggerFactory.getLogger(ProgressWebSocket.class);
 
-    private static final Gson GSON_INSTANCE = new Gson();
     /**
      * 存放Session
      */

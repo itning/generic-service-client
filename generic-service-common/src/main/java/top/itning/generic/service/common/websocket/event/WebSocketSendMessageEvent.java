@@ -2,7 +2,7 @@ package top.itning.generic.service.common.websocket.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import top.itning.generic.service.common.websocket.WebSocketMessageType;
+import top.itning.generic.service.common.websocket.type.WebSocketMessageType;
 
 /**
  * @author itning

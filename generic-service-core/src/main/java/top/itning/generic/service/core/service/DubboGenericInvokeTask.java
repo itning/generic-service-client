@@ -1,8 +1,6 @@
 package top.itning.generic.service.core.service;
 
 import com.alibaba.dubbo.rpc.RpcContext;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
@@ -11,14 +9,17 @@ import org.apache.dubbo.rpc.service.GenericService;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.CollectionUtils;
-import top.itning.generic.service.common.websocket.WebSocketMessageType;
 import top.itning.generic.service.common.websocket.event.WebSocketSendMessageEvent;
+import top.itning.generic.service.common.websocket.type.WebSocketMessageType;
 import top.itning.generic.service.core.bo.DubboGenericRequestBO;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE;
+import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE_WITH_PRETTY_PRINT;
 
 /**
  * Dubbo泛化调用任务
@@ -29,9 +30,6 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("deprecation")
 @Slf4j
 public class DubboGenericInvokeTask implements Runnable {
-    private static final Gson GSON_INSTANCE_WITH_PRETTY_PRINT = new GsonBuilder().setPrettyPrinting().create();
-
-    private static final Gson GSON_INSTANCE = new Gson();
 
     private static final String MDC_TRADE_ID = "INNER_TRACE_ID";
 

@@ -1,6 +1,5 @@
 package top.itning.generic.service.core.controller;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +12,8 @@ import top.itning.generic.service.core.service.DubboGenericService;
 
 import javax.annotation.Nonnull;
 
+import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE;
+
 /**
  * dubbo相关操作
  *
@@ -23,8 +24,6 @@ import javax.annotation.Nonnull;
 @RestController
 @RequestMapping("/dubbo")
 public class DubboGenericInvokeController implements ApplicationListener<WebSocketReceiveMessageEvent> {
-
-    private static final Gson GSON_INSTANCE = new Gson();
 
     private final DubboGenericService dubboGenericService;
 

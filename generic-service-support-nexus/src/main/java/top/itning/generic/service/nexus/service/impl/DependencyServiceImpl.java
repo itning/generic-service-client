@@ -1,7 +1,6 @@
 package top.itning.generic.service.nexus.service.impl;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
@@ -17,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import top.itning.generic.service.common.jar.JarHandlerInterface;
 import top.itning.generic.service.common.jar.MethodInfo;
-import top.itning.generic.service.common.websocket.WebSocketMessageType;
 import top.itning.generic.service.common.websocket.event.WebSocketSendMessageEvent;
+import top.itning.generic.service.common.websocket.type.WebSocketMessageType;
 import top.itning.generic.service.nexus.config.NexusProperties;
 import top.itning.generic.service.nexus.entry.Artifact;
 import top.itning.generic.service.nexus.entry.RestModel;
@@ -41,6 +40,8 @@ import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE;
+
 /**
  * @author itning
  * @since 2021/1/26 15:15
@@ -48,8 +49,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class DependencyServiceImpl implements DependencyService {
-
-    private static final Gson GSON_INSTANCE = new Gson();
 
     private static final ExecutorService EXECUTOR_SERVICE;
 

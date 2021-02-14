@@ -125,3 +125,39 @@ generic-service-support-nacos.nacos-list.nacos-C=127.0.0.1:8868
 #### 夜间模式
 
 ![dubboURLjiexi](https://raw.githubusercontent.com/itning/generic-service-client/master/pic/black.jpg)
+
+#### API
+
+提供对外API
+
+URL：http://localhost:8868/dubbo/invoke
+
+请求方法：POST
+
+Content-Type：application/json
+
+请求体：
+```json
+{
+    "url": "dubbo://192.168.66.1:20880",
+    "interfaceName": "top.itning.dubbotest.service.DemoService",
+    "method": "sayHello",
+    "version": "1.2",
+    "group": "haha",
+    "params": [
+        {
+            "java.util.Date": "2021-01-09 19:22:42"
+        },
+        {
+            "java.time.LocalDateTime": "2021-01-09T19:22:42"
+        },
+        {
+            "java.lang.String": "aaaaa"
+        }
+    ]
+}
+```
+
+该请求体对应的JAVA方法：
+
+``public String sayHello(Date time, LocalDateTime localDateTime, String name)``

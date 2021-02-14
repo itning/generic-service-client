@@ -5,7 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.itning.generic.service.nexus.entry.Artifact;
 import top.itning.generic.service.nexus.entry.DownloadInfo;
-import top.itning.generic.service.nexus.entry.RestModel;
+import top.itning.generic.service.common.model.RestModel;
 import top.itning.generic.service.nexus.http.HttpRequestClientFactory;
 import top.itning.generic.service.nexus.service.DependencyService;
 

@@ -2,7 +2,7 @@ package top.itning.generic.service.nexus.service;
 
 
 import top.itning.generic.service.nexus.entry.Artifact;
-import top.itning.generic.service.nexus.entry.RestModel;
+import top.itning.generic.service.common.model.RestModel;
 
 import java.util.List;
 

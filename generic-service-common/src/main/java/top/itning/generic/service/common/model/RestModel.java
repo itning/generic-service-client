@@ -1,4 +1,4 @@
-package top.itning.generic.service.nexus.entry;
+package top.itning.generic.service.common.model;
 
 import lombok.Data;
 

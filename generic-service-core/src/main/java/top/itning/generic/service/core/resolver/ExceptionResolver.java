@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import top.itning.generic.service.common.model.RestModel;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
@@ -33,7 +34,7 @@ public class ExceptionResolver {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseBody
-    public void methodArgumentNotValidExceptionHandler(HttpServletResponse response, MethodArgumentNotValidException e) {
+    public RestModel<?> methodArgumentNotValidExceptionHandler(HttpServletResponse response, MethodArgumentNotValidException e) {
 
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
 
@@ -46,6 +47,7 @@ public class ExceptionResolver {
         log.warn(message);
 
         response.setStatus(HttpStatus.BAD_REQUEST.value());
+        return RestModel.failed(message);
     }
 
     /**
@@ -56,11 +58,12 @@ public class ExceptionResolver {
      */
     @ExceptionHandler(value = ConstraintViolationException.class)
     @ResponseBody
-    public void constraintViolationExceptionHandler(HttpServletResponse response, ConstraintViolationException e) {
+    public RestModel<?> constraintViolationExceptionHandler(HttpServletResponse response, ConstraintViolationException e) {
 
         log.warn(e.getMessage());
 
         response.setStatus(HttpStatus.BAD_REQUEST.value());
+        return RestModel.failed(e.getMessage());
     }
 
     @ExceptionHandler(value = NoHandlerFoundException.class)

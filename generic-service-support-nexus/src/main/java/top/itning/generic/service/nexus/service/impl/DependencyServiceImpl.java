@@ -20,7 +20,7 @@ import top.itning.generic.service.common.websocket.event.WebSocketSendMessageEve
 import top.itning.generic.service.common.websocket.type.WebSocketMessageType;
 import top.itning.generic.service.nexus.config.NexusProperties;
 import top.itning.generic.service.nexus.entry.Artifact;
-import top.itning.generic.service.nexus.entry.RestModel;
+import top.itning.generic.service.common.model.RestModel;
 import top.itning.generic.service.nexus.http.ApacheHttpRequestClient;
 import top.itning.generic.service.nexus.service.DependencyService;
 import top.itning.generic.service.nexus.service.UserService;

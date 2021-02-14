@@ -16,6 +16,7 @@ import top.itning.generic.service.core.bo.DubboGenericRequestBO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE;
@@ -29,22 +30,28 @@ import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE_WIT
  */
 @SuppressWarnings("deprecation")
 @Slf4j
-public class DubboGenericInvokeTask implements Runnable {
+public class DubboGenericInvokeTask implements Callable<Object> {
 
     private static final String MDC_TRADE_ID = "INNER_TRACE_ID";
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final DubboGenericRequestBO dubboGenericRequestBO;
     private final ApplicationConfig applicationConfig;
+    private final boolean asynchronous;
 
     public DubboGenericInvokeTask(ApplicationEventPublisher applicationEventPublisher, ApplicationConfig applicationConfig, DubboGenericRequestBO dubboGenericRequestBO) {
+        this(applicationEventPublisher, applicationConfig, dubboGenericRequestBO, true);
+    }
+
+    public DubboGenericInvokeTask(ApplicationEventPublisher applicationEventPublisher, ApplicationConfig applicationConfig, DubboGenericRequestBO dubboGenericRequestBO, boolean asynchronous) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.applicationConfig = applicationConfig;
         this.dubboGenericRequestBO = dubboGenericRequestBO;
+        this.asynchronous = asynchronous;
     }
 
     @Override
-    public void run() {
+    public Object call() {
         ReferenceConfig<GenericService> reference = null;
         try {
             putTrace();
@@ -87,7 +94,7 @@ public class DubboGenericInvokeTask implements Runnable {
             if (null == result) {
                 log.info("Result Is Null");
                 sendMessage("调用成功：入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n");
-                return;
+                return null;
             }
 
             log.info("Result Type：{} Value:{}", result.getClass().getName(), result);
@@ -96,9 +103,16 @@ public class DubboGenericInvokeTask implements Runnable {
 
             sendMessage("调用成功：TraceID[" + MDC.get(MDC_TRADE_ID) + "] 入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n>>>\n");
             sendMessage(WebSocketMessageType.JSON, jsonString);
+
+            return result;
         } catch (Throwable e) {
             log.warn("Invoke Error：", e);
             sendMessage("调用失败：入参[" + GSON_INSTANCE.toJson(dubboGenericRequestBO) + "]\n Msg：" + e.getMessage());
+            if (asynchronous) {
+                return null;
+            } else {
+                throw e;
+            }
         } finally {
             if (null != reference) {
                 reference.destroy();
@@ -113,7 +127,9 @@ public class DubboGenericInvokeTask implements Runnable {
     }
 
     private void sendMessage(WebSocketMessageType type, String message) {
-        applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), type, message));
+        if (asynchronous) {
+            applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), type, message));
+        }
     }
 
     private void putTrace() {

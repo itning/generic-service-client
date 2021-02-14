@@ -1,9 +1,13 @@
 package top.itning.generic.service.core.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.itning.generic.service.common.model.RestModel;
 import top.itning.generic.service.common.websocket.event.WebSocketReceiveMessageEvent;
 import top.itning.generic.service.core.bo.DubboGenericRequestBO;
 import top.itning.generic.service.core.converter.DubboGenericConverter;
@@ -20,6 +24,7 @@ import static top.itning.generic.service.common.util.JsonUtils.GSON_INSTANCE;
  * @author itning
  * @since 2020/10/19 16:21
  */
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/dubbo")
@@ -38,13 +43,15 @@ public class DubboGenericInvokeController implements ApplicationListener<WebSock
      * @return {@link DubboGenericRequestDTO#toString()}
      */
     @PostMapping("/invoke")
-    public String invokeMethod(@RequestBody @Validated DubboGenericRequestDTO requestParams) {
+    public ResponseEntity<?> invokeMethod(@RequestBody @Validated DubboGenericRequestDTO requestParams) {
 
         DubboGenericRequestBO dubboGenericRequestBO = DubboGenericConverter.INSTANCE.toBO(requestParams);
-
-        dubboGenericService.invoke(dubboGenericRequestBO);
-
-        return dubboGenericRequestBO.toString();
+        try {
+            return ResponseEntity.ok(RestModel.success(dubboGenericService.invokeSynchronize(dubboGenericRequestBO)));
+        } catch (Throwable e) {
+            log.info("Invoke Catch Exception", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(RestModel.failed(e.getMessage()));
+        }
     }
 
     @Override

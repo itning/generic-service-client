@@ -30,9 +30,4 @@ public class DubboGenericRequestDTO implements Serializable {
     private String group;
 
     private List<Map<String, Object>> params;
-
-    @NotEmpty(message = "TOKEN不能为空")
-    private String token;
-
-    private String echo;
 }

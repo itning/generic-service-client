@@ -54,4 +54,9 @@ public class DubboGenericServiceImpl implements DubboGenericService {
             applicationEventPublisher.publishEvent(new WebSocketSendMessageEvent(dubboGenericRequestBO.getToken(), dubboGenericRequestBO.getEcho(), "线程池满了，请稍后再试！"));
         }
     }
+
+    @Override
+    public Object invokeSynchronize(DubboGenericRequestBO dubboGenericRequestBO) {
+        return new DubboGenericInvokeTask(applicationEventPublisher, applicationConfig, dubboGenericRequestBO, false).call();
+    }
 }

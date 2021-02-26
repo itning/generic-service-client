@@ -144,6 +144,8 @@ Content-Type：application/json
     "method": "sayHello",
     "version": "1.2",
     "group": "haha",
+    "retries": 0,
+    "timeout": 400,
     "params": [
         {
             "java.util.Date": "2021-01-09 19:22:42"

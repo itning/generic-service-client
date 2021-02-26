@@ -24,9 +24,21 @@ public class DubboGenericRequestBO {
 
     private String group;
 
+    private Integer retries;
+
+    private Integer timeout;
+
     private List<Map<String, Object>> params;
 
     private String token;
 
     private String echo;
+
+    public Integer getRetries() {
+        return null == retries ? 0 : retries;
+    }
+
+    public Integer getTimeout() {
+        return null == timeout ? 5000 : timeout;
+    }
 }

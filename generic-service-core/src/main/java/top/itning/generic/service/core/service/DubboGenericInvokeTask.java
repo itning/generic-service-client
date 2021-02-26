@@ -71,9 +71,9 @@ public class DubboGenericInvokeTask implements Callable<Object> {
 
             reference.setUrl(dubboGenericRequestBO.getUrl());
 
-            reference.setRetries(0);
+            reference.setRetries(dubboGenericRequestBO.getRetries());
 
-            reference.setTimeout(5000);
+            reference.setTimeout(dubboGenericRequestBO.getTimeout());
 
             reference.setParameters(Collections.singletonMap(Constants.RECONNECT_KEY, "false"));
 

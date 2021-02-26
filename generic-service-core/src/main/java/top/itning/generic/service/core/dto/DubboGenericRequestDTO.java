@@ -29,5 +29,9 @@ public class DubboGenericRequestDTO implements Serializable {
 
     private String group;
 
+    private Integer retries;
+
+    private Integer timeout;
+
     private List<Map<String, Object>> params;
 }

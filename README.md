@@ -5,6 +5,7 @@
 [![GitHub watchers](https://img.shields.io/github/watchers/itning/generic-service-client.svg?style=social&label=Watch)](https://github.com/itning/generic-service-client/watchers)
 [![GitHub followers](https://img.shields.io/github/followers/itning.svg?style=social&label=Follow)](https://github.com/itning?tab=followers)
 
+[![Github Action](https://github.com/itning/generic-service-client/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/itning/generic-service-client/actions/workflows/maven.yml)
 [![GitHub issues](https://img.shields.io/github/issues/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client/issues)
 [![GitHub license](https://img.shields.io/github/license/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client/blob/master/LICENSE)
 [![GitHub last commit](https://img.shields.io/github/last-commit/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client/commits)

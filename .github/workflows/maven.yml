@@ -1,13 +1,13 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+# This workflow will build a Java project with Maven and create release
+# author: https://github.com/itning
 
 name: Java CI with Maven
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
@@ -28,12 +28,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: v${{ github.run_number }}
-        release_name: v${{ github.run_number }}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+            - This Release Build By Github Action.
+            - [Click Me To See Change Log File.](https://github.com/itning/${{ github.repository }}/blob/master/CHANGELOG.md)
         draft: false
         prerelease: false
     - name: Upload Release Asset

@@ -11,6 +11,10 @@
 
     <artifactId>generic-service-run</artifactId>
 
+    <properties>
+        <jarFileName>${project.version}</jarFileName>
+    </properties>
+
 
     <dependencies>
         <dependency>
@@ -57,7 +61,7 @@
     </dependencies>
 
     <build>
-        <finalName>generic-service-client-${project.version}</finalName>
+        <finalName>generic-service-client-${jarFileName}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

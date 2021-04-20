@@ -30,7 +30,7 @@
 
 ## 快速开始
 
-使用编译好的，直接打开即可：https://github.com/itning/generic-service-client-electron/releases
+**[推荐]使用编译好的，直接打开即可：** https://github.com/itning/generic-service-client-electron/releases
 
 直接 [下载JAR](https://github.com/itning/generic-service-client/releases/download/1.3.3-W1-RELEASE/generic-service-client-1.3.3-W1-RELEASE.jar) 包，输入命令`java -jar generic-service-client-1.3.3-W1-RELEASE.jar`
 

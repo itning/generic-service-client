@@ -85,6 +85,29 @@ generic-service-support-nacos.nacos-list.nacos-C=127.0.0.1:8868
 
 构建生产：`npm run build`
 
+#### Docker
+
+支持docker部署
+
+[镜像：itning/generic-service-client Tags (docker.com)](https://hub.docker.com/r/itning/generic-service-client/tags?page=1&ordering=last_updated)
+
+部署命令：
+
+`docker run --name generic-service-client -d -p 8868:8868 -e generic-service-support-zk.zk-list.zk-A=192.168.66.1:2181,192.168.66.2:2181:2181,192.168.66.3:2181 -e generic-service-support-zk.zk-list.zk-B=192.168.77.1:2181,192.168.77.2:2181:2181,192.168.77.3:2181 itning/generic-service-client:latest`
+
+环境说明：
+
+| 键                                         | 值（例子）                                                 | 说明                                                         |
+| ------------------------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------ |
+| generic-service-support-zk.zk-list.A       | 192.168.66.1:2181,192.168.66.2:2181:2181,192.168.66.3:2181 | 可选Zk地址，其中A可以换成其它名字，例如generic-service-support-zk.zk-list.BBB |
+| generic-service-support-nacos.nacos-list.A | 127.0.0.1:8848                                             | 可选nacos注册中心地址，其中A可以换成其它名字，例如generic-service-support-nacos.nacos-list.BBB |
+| generic-service-support-nexus.base-url     | http://localhost:8888/nexus                                | 可选nexus私服地址                                            |
+| generic-service-support-nexus.file-dir     | /tmp                                                       | 可选从nexus私服下载的文件保存地址                            |
+| generic-service-support-nexus.username     | root                                                       | 可选nexus私服用户名                                          |
+| generic-service-support-nexus.password     | root                                                       | 可选nexus私服密码                                            |
+
+
+
 ### 使用说明
 
 #### 当有多个服务提供者的时候，会提示选择：

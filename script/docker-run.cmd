@@ -1,0 +1,2 @@
+docker run --name generic-service-client -d -p 8868:8868 -e generic-service-support-zk.zk-list.zk-A=192.168.66.1:2181,192.168.66.2:2181:2181,192.168.66.3:2181 -e generic-service-support-zk.zk-list.zk-B=192.168.77.1:2181,192.168.77.2:2181:2181,192.168.77.3:2181 itning/generic-service-client
+PAUSE

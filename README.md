@@ -11,7 +11,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client/commits)
 [![GitHub release](https://img.shields.io/github/release/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client/releases)
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/itning/generic-service-client.svg)](https://github.com/itning/generic-service-client)
-[![HitCount](http://hits.dwyl.com/itning/generic-service-client.svg)](http://hits.dwyl.com/itning/generic-service-client)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fitning%2Fgeneric-service-client&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![language](https://img.shields.io/badge/language-JAVA-green.svg)](https://github.com/itning/generic-service-client)
 
 ## 项目架构
